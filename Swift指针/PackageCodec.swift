@@ -1,0 +1,497 @@
+//
+// PackageCodec.swift
+// Created on 2019/9/9
+// Description <#⽂件描述#> 
+// Copyright © 2019 LQ inc. All rights reserved.
+// @author LQ  //
+
+import UIKit
+
+
+enum PackageCodesError: Error {
+    case EncodeOutOfMemory
+    case DecodeOutOfBytes
+    
+}
+
+protocol PackageEncoder {
+    
+    //MARK: - int
+    
+    func encoderUInt8(_ value: UInt8) throws
+    
+    func encoderBigEndUInt16(_ value: UInt16) throws
+    func encoderBigEndUInt32(_ value: UInt32) throws
+    func encoderBigEndUInt64(_ value: UInt64) throws
+    
+    func encoderLittleEndUInt16(_ value: UInt16) throws
+    func encoderLittleEndUInt32(_ value: UInt32) throws
+    func encoderLittleEndUInt64(_ value: UInt64) throws
+    
+}
+
+protocol PackageDecoder {
+    
+    //MARK: - int
+    
+    func decoderUInt8() throws -> UInt8
+    
+    func decoderBigEndUInt16() throws -> UInt16
+    func decoderBigEndUInt32() throws -> UInt32
+    func decoderBigEndUInt64() throws -> UInt64
+    
+    func decoderLittleEndUInt16() throws -> UInt16
+    func decoderLittleEndUInt32() throws -> UInt32
+    func decoderLittleEndUInt64() throws -> UInt64
+}
+
+class PackageCodec: NSObject {
+    
+    var bufferSize: Int!
+    var position: Int!
+    var bufferPoint: UnsafeMutableBufferPointer<UInt8>!
+    
+    deinit {
+        self.bufferPoint.deallocate()
+    }
+    
+    class func encoder(capacity size: Int) -> PackageCodec {
+        let codec         = PackageCodec()
+        codec.bufferSize  = size
+        codec.bufferPoint = UnsafeMutableBufferPointer.allocate(capacity: size)
+        codec.position    = 0
+        return codec
+    }
+    
+    
+    class func decoder(data: Data) -> PackageCodec {
+        let codec         = PackageCodec()
+        let p             = [UInt8](data)
+        codec.bufferSize  = p.count
+        codec.bufferPoint = UnsafeMutableBufferPointer.allocate(capacity: p.count)
+        for (i,value) in p.enumerated() {
+            codec.bufferPoint[i] = value
+        }
+        codec.position    = 0
+        return codec
+    }
+}
+
+
+//MARK: - PackageEncoder
+
+extension PackageCodec: PackageEncoder {
+    
+    var targetData: Data {
+        get {
+            var data = Data()
+            data.append(contentsOf: self.bufferPoint)
+            return data
+        }
+    }
+    
+    func encoderUInt8(_ value: UInt8) throws {
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = value
+        self.position += 1
+    }
+    
+    func encoderBigEndUInt16(_ value: UInt16) throws {
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 8 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value & 0x00FF)
+        self.position += 1
+    }
+    
+    func encoderBigEndUInt32(_ value: UInt32) throws {
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 24 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 16 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 8 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value & 0x00FF)
+        self.position += 1
+    }
+    
+    func encoderBigEndUInt64(_ value: UInt64) throws {
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 56 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 48 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 40 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 32 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 24 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 16 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 8 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value & 0x00FF)
+        self.position += 1
+    }
+    
+    func encoderLittleEndUInt16(_ value: UInt16) throws {
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 8 & 0x00FF)
+        self.position += 1
+    }
+    
+    func encoderLittleEndUInt32(_ value: UInt32) throws {
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 8 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 16 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 24 & 0x00FF)
+        self.position += 1
+    }
+    
+    func encoderLittleEndUInt64(_ value: UInt64) throws {
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 8 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 16 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 24 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 32 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 40 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 48 & 0x00FF)
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.EncodeOutOfMemory
+        }
+        self.bufferPoint[self.position] = UInt8(value >> 56 & 0x00FF)
+        self.position += 1
+    }
+}
+
+
+//MARK: - PackageDecoder
+
+extension PackageCodec: PackageDecoder {
+    
+    func decoderUInt8() throws -> UInt8 {
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value = self.bufferPoint[self.position]
+        self.position += 1
+        return value
+    }
+    
+    func decoderBigEndUInt16() throws -> UInt16 {
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value1 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value2 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        let value = UInt16(value1) << 8 | UInt16(value2)
+        return value
+        
+    }
+    
+    func decoderBigEndUInt32() throws -> UInt32 {
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value1 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value2 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value3 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value4 = self.bufferPoint[self.position]
+        self.position += 1
+        let value = UInt32(value1) << 24 | UInt32(value2) << 16 | UInt32(value3) << 8 | UInt32(value4)
+        
+        return value
+    }
+    
+    func decoderBigEndUInt64() throws -> UInt64 {
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value1 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value2 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value3 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value4 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value5 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value6 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value7 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value8 = self.bufferPoint[self.position]
+        self.position += 1
+        let value = UInt64(value1) << 56 | UInt64(value2) << 48 | UInt64(value3) << 40 | UInt64(value4) << 32 | UInt64(value5) << 24 |
+                    UInt64(value6) << 16 | UInt64(value7) << 8 | UInt64(value8)
+        
+        return value
+    }
+    
+    func decoderLittleEndUInt16() throws -> UInt16 {
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value1 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value2 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        let value = UInt16(value1) | UInt16(value2) << 8
+        return value
+    }
+    
+    func decoderLittleEndUInt32() throws -> UInt32 {
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value1 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value2 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value3 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value4 = self.bufferPoint[self.position]
+        self.position += 1
+        let value = UInt32(value1) | UInt32(value2) << 8 | UInt32(value3) << 16 | UInt32(value4) << 24
+        
+        return value
+    }
+    
+    func decoderLittleEndUInt64() throws -> UInt64 {
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value1 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value2 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value3 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value4 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value5 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value6 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value7 = self.bufferPoint[self.position]
+        self.position += 1
+        
+        if self.position >= self.bufferSize {
+            throw PackageCodesError.DecodeOutOfBytes
+        }
+        let value8 = self.bufferPoint[self.position]
+        self.position += 1
+        let value = UInt64(value1) | UInt64(value2) << 8 | UInt64(value3) << 16 | UInt64(value4) << 24 | UInt64(value5) << 32 |
+            UInt64(value6) << 40 | UInt64(value7) << 48 | UInt64(value8) << 56
+        
+        return value
+    }
+    
+}
