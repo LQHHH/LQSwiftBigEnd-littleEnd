@@ -28,6 +28,10 @@ protocol PackageEncoder {
     func encoderLittleEndUInt32(_ value: UInt32) throws
     func encoderLittleEndUInt64(_ value: UInt64) throws
     
+    //MARK: -string
+    
+    func encoderString(string: String, end: Bool) throws
+    
 }
 
 protocol PackageDecoder {
@@ -43,6 +47,11 @@ protocol PackageDecoder {
     func decoderLittleEndUInt16() throws -> UInt16
     func decoderLittleEndUInt32() throws -> UInt32
     func decoderLittleEndUInt64() throws -> UInt64
+    
+    //MARK: - string
+    
+    //解码的string必须是带0结尾的
+    func decoderString(length: Int) throws -> String
 }
 
 class PackageCodec: NSObject {
@@ -85,7 +94,12 @@ extension PackageCodec: PackageEncoder {
     var targetData: Data {
         get {
             var data = Data()
-            data.append(contentsOf: self.bufferPoint)
+            var result = [UInt8]()
+            for i in 0 ..< self.position {
+                let value = self.bufferPoint[i]
+                result.append(value)
+            }
+            data.append(contentsOf: result)
             return data
         }
     }
@@ -276,6 +290,29 @@ extension PackageCodec: PackageEncoder {
         }
         self.bufferPoint[self.position] = UInt8(value >> 56 & 0x00FF)
         self.position += 1
+    }
+    
+    func encoderString(string: String, end: Bool) throws {
+        precondition(string.count > 0, "encoder string invalid!")
+        
+        let data = string.data(using: .utf8)
+        let p    = [UInt8](data!)
+        
+        for (i,value) in p.enumerated() {
+            if self.position >= self.bufferSize {
+                throw PackageCodesError.EncodeOutOfMemory
+            }
+            self.bufferPoint[self.position] = value
+            self.position += 1
+            
+            if (end && i == p.count - 1) {
+                if self.position >= self.bufferSize {
+                    throw PackageCodesError.EncodeOutOfMemory
+                }
+                self.bufferPoint[self.position] = 0
+                self.position += 1
+            }
+        }
     }
 }
 
@@ -492,6 +529,20 @@ extension PackageCodec: PackageDecoder {
             UInt64(value6) << 40 | UInt64(value7) << 48 | UInt64(value8) << 56
         
         return value
+    }
+    
+    func decoderString(length: Int) throws -> String {
+        var result = [UInt8]()
+        for _ in 0 ..< length {
+            if self.position >= self.bufferSize {
+                throw PackageCodesError.DecodeOutOfBytes
+            }
+            let value = self.bufferPoint[self.position]
+            self.position += 1
+            result.append(value)
+        }
+        self.position += 1
+        return String.init(data: Data.init(result), encoding: .utf8)!
     }
     
 }

@@ -8,7 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -185,7 +185,28 @@ class ViewController: UIViewController {
         showAlert(message: "<02038f63 01054203> 小端模式Uint64解码后为:\(value)", title: "data:<02038f63 01054203>")
     }
     
+    @IBAction func encodeString(_ sender: Any) {
+        let packageCodec = PackageCodec.encoder(capacity: 20)
+        try! packageCodec.encoderUInt8(UInt8(2))
+        try! packageCodec.encoderString(string: "哈哈", end: true)
+        print(NSData.init(data: packageCodec.targetData))
+        print("xxxxxxxxxxxxxxxx")
+        print([UInt8](packageCodec.targetData))
+        showAlert(message: "2 (哈哈) 编码后为:\(NSData.init(data: packageCodec.targetData))", title: "UInt8(2) (哈哈)")
+    }
     
+    @IBAction func deCodeString(_ sender: Any) {
+        let data = Data.init([3,229, 147, 136, 229, 147, 136, 0,232, 162, 171, 228, 189, 160, 232, 167, 163, 231, 160, 129, 228, 186, 134, 0])
+        let packageCodec = PackageCodec.decoder(data: data)
+        let value   = try! packageCodec.decoderUInt8()
+        let string  = try! packageCodec.decoderString(length: 6)
+        let string1 = try! packageCodec.decoderString(length: 15)
+        print(value)
+        print(string)
+        print(string1)
+        
+        showAlert(message: "<03e59388e5938800e59388e5938800> decoder为:\(value)" + string + string1, title: "data:<03e59388e5938800e59388e5938800>")
+    }
     
 }
 

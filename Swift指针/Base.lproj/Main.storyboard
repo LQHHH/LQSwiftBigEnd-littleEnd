@@ -229,6 +229,40 @@
                                     <action selector="littleEndDecoderUint64:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7Ce-p5-FQQ"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="编解码string" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JKw-Tc-mZz">
+                                <rect key="frame" x="0.0" y="619" width="414" height="30"/>
+                                <color key="backgroundColor" name="systemOrangeColor" catalog="System" colorSpace="catalog"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="o0r-fm-6H7"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qfu-3g-arl">
+                                <rect key="frame" x="0.0" y="679" width="100" height="50"/>
+                                <color key="backgroundColor" red="0.92779582739999999" green="0.32806854790000001" blue="0.33845169200000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="IQP-4X-4i4"/>
+                                    <constraint firstAttribute="width" constant="100" id="n80-Ad-Thc"/>
+                                </constraints>
+                                <state key="normal" title="EncodeString"/>
+                                <connections>
+                                    <action selector="encodeString:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gg2-uE-jYo"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a0u-39-kTx">
+                                <rect key="frame" x="130" y="679" width="100" height="50"/>
+                                <color key="backgroundColor" red="0.83921568629999999" green="0.17254901959999999" blue="0.0" alpha="0.87387628419999996" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="MUh-DB-eIh"/>
+                                    <constraint firstAttribute="height" constant="50" id="ihA-6X-H5E"/>
+                                </constraints>
+                                <state key="normal" title="DecodeString"/>
+                                <connections>
+                                    <action selector="deCodeString:" destination="BYZ-38-t0r" eventType="touchUpInside" id="g7m-HG-Yt3"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -240,23 +274,29 @@
                             <constraint firstItem="JnK-Ah-1BR" firstAttribute="top" secondItem="1ta-Jf-DXT" secondAttribute="bottom" constant="130" id="5r4-7k-ACg"/>
                             <constraint firstItem="gRj-qM-NyD" firstAttribute="top" secondItem="JnK-Ah-1BR" secondAttribute="bottom" constant="30" id="805-ff-2Zx"/>
                             <constraint firstItem="MeU-zT-pea" firstAttribute="top" secondItem="HAc-qD-sDd" secondAttribute="bottom" constant="10" id="9tJ-GW-OHC"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="JKw-Tc-mZz" secondAttribute="trailing" id="A0R-PE-Ht4"/>
                             <constraint firstItem="qqr-FT-Nve" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="75" id="Ar2-UC-iiB"/>
                             <constraint firstItem="GTR-Mv-rLC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="BEZ-7u-Jfy"/>
                             <constraint firstItem="4ZU-pK-tsz" firstAttribute="top" secondItem="JnK-Ah-1BR" secondAttribute="bottom" constant="30" id="CbZ-kF-p1v"/>
                             <constraint firstItem="HAc-qD-sDd" firstAttribute="top" secondItem="JnK-Ah-1BR" secondAttribute="bottom" constant="30" id="CkD-bT-7jt"/>
+                            <constraint firstItem="a0u-39-kTx" firstAttribute="leading" secondItem="qfu-3g-arl" secondAttribute="trailing" constant="30" id="Dtl-Hv-F2E"/>
                             <constraint firstItem="e26-px-1Gr" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="25" id="E3N-db-5Xh"/>
                             <constraint firstItem="MeU-zT-pea" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="GJ9-pN-5aH"/>
                             <constraint firstItem="GNB-ON-fP2" firstAttribute="top" secondItem="MeU-zT-pea" secondAttribute="bottom" constant="10" id="GyC-Tc-Fsr"/>
                             <constraint firstItem="pFM-J8-xa4" firstAttribute="top" secondItem="gRj-qM-NyD" secondAttribute="bottom" constant="10" id="H25-qh-tYK"/>
                             <constraint firstItem="b1q-B2-ig9" firstAttribute="top" secondItem="xx1-nh-y1u" secondAttribute="bottom" constant="10" id="LTw-ZE-d5n"/>
+                            <constraint firstItem="qfu-3g-arl" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Lbq-JW-Qex"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="e26-px-1Gr" secondAttribute="trailing" id="NrP-nc-0NE"/>
                             <constraint firstItem="gtz-lJ-BqL" firstAttribute="leading" secondItem="1ta-Jf-DXT" secondAttribute="trailing" constant="30" id="QGM-x5-f93"/>
                             <constraint firstItem="qqr-FT-Nve" firstAttribute="leading" secondItem="gq5-IE-I7Q" secondAttribute="trailing" constant="30" id="QxA-sA-f1G"/>
                             <constraint firstItem="9hp-6r-WeK" firstAttribute="leading" secondItem="GNB-ON-fP2" secondAttribute="trailing" constant="30" id="Riv-ed-ufQ"/>
                             <constraint firstItem="1ta-Jf-DXT" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="V0d-ub-6On"/>
+                            <constraint firstItem="qfu-3g-arl" firstAttribute="top" secondItem="JKw-Tc-mZz" secondAttribute="bottom" constant="30" id="VzU-BF-zpB"/>
+                            <constraint firstItem="a0u-39-kTx" firstAttribute="top" secondItem="JKw-Tc-mZz" secondAttribute="bottom" constant="30" id="WCS-QO-JZl"/>
                             <constraint firstItem="xx1-nh-y1u" firstAttribute="leading" secondItem="qqr-FT-Nve" secondAttribute="trailing" constant="30" id="Wz8-FH-I7D"/>
                             <constraint firstItem="9hp-6r-WeK" firstAttribute="top" secondItem="pFM-J8-xa4" secondAttribute="bottom" constant="10" id="X9r-t7-2WM"/>
                             <constraint firstItem="GNB-ON-fP2" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="YZ1-tD-NNY"/>
+                            <constraint firstItem="JKw-Tc-mZz" firstAttribute="top" secondItem="GNB-ON-fP2" secondAttribute="bottom" constant="30" id="eIf-JG-P2c"/>
                             <constraint firstItem="JnK-Ah-1BR" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="hp1-OS-uUw"/>
                             <constraint firstItem="4ZU-pK-tsz" firstAttribute="leading" secondItem="gRj-qM-NyD" secondAttribute="trailing" constant="30" id="jbN-0Z-od1"/>
                             <constraint firstItem="pFM-J8-xa4" firstAttribute="leading" secondItem="MeU-zT-pea" secondAttribute="trailing" constant="30" id="jnj-xR-MZD"/>
@@ -265,6 +305,7 @@
                             <constraint firstItem="iFR-aZ-aAQ" firstAttribute="leading" secondItem="pFM-J8-xa4" secondAttribute="trailing" constant="30" id="nYg-05-ukN"/>
                             <constraint firstItem="gq5-IE-I7Q" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="75" id="ohT-lL-4ov"/>
                             <constraint firstItem="ArN-j2-epL" firstAttribute="top" secondItem="gtz-lJ-BqL" secondAttribute="bottom" constant="10" id="pTC-7V-ubV"/>
+                            <constraint firstItem="JKw-Tc-mZz" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="u7Y-cd-elc"/>
                             <constraint firstItem="gRj-qM-NyD" firstAttribute="leading" secondItem="HAc-qD-sDd" secondAttribute="trailing" constant="30" id="vg4-AJ-MBZ"/>
                             <constraint firstItem="iFR-aZ-aAQ" firstAttribute="top" secondItem="4ZU-pK-tsz" secondAttribute="bottom" constant="10" id="xmQ-f1-bpa"/>
                             <constraint firstItem="e26-px-1Gr" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="y30-PJ-9T5"/>
@@ -276,7 +317,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="494" y="155"/>
+            <point key="canvasLocation" x="492.75362318840581" y="154.6875"/>
         </scene>
     </scenes>
 </document>
