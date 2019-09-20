@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -229,7 +227,7 @@
                                     <action selector="littleEndDecoderUint64:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7Ce-p5-FQQ"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="编解码string" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JKw-Tc-mZz">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="编解码string----编解码data" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JKw-Tc-mZz">
                                 <rect key="frame" x="0.0" y="619" width="414" height="30"/>
                                 <color key="backgroundColor" name="systemOrangeColor" catalog="System" colorSpace="catalog"/>
                                 <constraints>
@@ -263,6 +261,30 @@
                                     <action selector="deCodeString:" destination="BYZ-38-t0r" eventType="touchUpInside" id="g7m-HG-Yt3"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bHZ-nw-WDP">
+                                <rect key="frame" x="0.0" y="739" width="100" height="50"/>
+                                <color key="backgroundColor" red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="NtW-mB-cOc"/>
+                                    <constraint firstAttribute="width" constant="100" id="dkz-oY-Wrv"/>
+                                </constraints>
+                                <state key="normal" title="EncodeData"/>
+                                <connections>
+                                    <action selector="encodeData:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4lb-1d-XPd"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mg5-Gl-wOy">
+                                <rect key="frame" x="130" y="739" width="100" height="50"/>
+                                <color key="backgroundColor" red="0.68627450980392157" green="0.32156862745098042" blue="0.87058823529411766" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="D44-YL-IaB"/>
+                                    <constraint firstAttribute="width" constant="100" id="vHm-Qg-iQg"/>
+                                </constraints>
+                                <state key="normal" title="DecodeData"/>
+                                <connections>
+                                    <action selector="deCodeData:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bAN-9d-Sf0"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -272,6 +294,7 @@
                             <constraint firstItem="1ta-Jf-DXT" firstAttribute="top" secondItem="gq5-IE-I7Q" secondAttribute="bottom" constant="10" id="4nP-OB-6xw"/>
                             <constraint firstItem="b1q-B2-ig9" firstAttribute="leading" secondItem="gtz-lJ-BqL" secondAttribute="trailing" constant="30" id="5l8-24-IvR"/>
                             <constraint firstItem="JnK-Ah-1BR" firstAttribute="top" secondItem="1ta-Jf-DXT" secondAttribute="bottom" constant="130" id="5r4-7k-ACg"/>
+                            <constraint firstItem="Mg5-Gl-wOy" firstAttribute="top" secondItem="a0u-39-kTx" secondAttribute="bottom" constant="10" id="7Vq-rn-wul"/>
                             <constraint firstItem="gRj-qM-NyD" firstAttribute="top" secondItem="JnK-Ah-1BR" secondAttribute="bottom" constant="30" id="805-ff-2Zx"/>
                             <constraint firstItem="MeU-zT-pea" firstAttribute="top" secondItem="HAc-qD-sDd" secondAttribute="bottom" constant="10" id="9tJ-GW-OHC"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="JKw-Tc-mZz" secondAttribute="trailing" id="A0R-PE-Ht4"/>
@@ -284,6 +307,8 @@
                             <constraint firstItem="MeU-zT-pea" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="GJ9-pN-5aH"/>
                             <constraint firstItem="GNB-ON-fP2" firstAttribute="top" secondItem="MeU-zT-pea" secondAttribute="bottom" constant="10" id="GyC-Tc-Fsr"/>
                             <constraint firstItem="pFM-J8-xa4" firstAttribute="top" secondItem="gRj-qM-NyD" secondAttribute="bottom" constant="10" id="H25-qh-tYK"/>
+                            <constraint firstItem="Mg5-Gl-wOy" firstAttribute="leading" secondItem="bHZ-nw-WDP" secondAttribute="trailing" constant="30" id="H2W-0c-Oyt"/>
+                            <constraint firstItem="bHZ-nw-WDP" firstAttribute="top" secondItem="qfu-3g-arl" secondAttribute="bottom" constant="10" id="I86-tV-Lmi"/>
                             <constraint firstItem="b1q-B2-ig9" firstAttribute="top" secondItem="xx1-nh-y1u" secondAttribute="bottom" constant="10" id="LTw-ZE-d5n"/>
                             <constraint firstItem="qfu-3g-arl" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Lbq-JW-Qex"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="e26-px-1Gr" secondAttribute="trailing" id="NrP-nc-0NE"/>
@@ -298,6 +323,7 @@
                             <constraint firstItem="GNB-ON-fP2" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="YZ1-tD-NNY"/>
                             <constraint firstItem="JKw-Tc-mZz" firstAttribute="top" secondItem="GNB-ON-fP2" secondAttribute="bottom" constant="30" id="eIf-JG-P2c"/>
                             <constraint firstItem="JnK-Ah-1BR" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="hp1-OS-uUw"/>
+                            <constraint firstItem="bHZ-nw-WDP" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="irM-GR-XyP"/>
                             <constraint firstItem="4ZU-pK-tsz" firstAttribute="leading" secondItem="gRj-qM-NyD" secondAttribute="trailing" constant="30" id="jbN-0Z-od1"/>
                             <constraint firstItem="pFM-J8-xa4" firstAttribute="leading" secondItem="MeU-zT-pea" secondAttribute="trailing" constant="30" id="jnj-xR-MZD"/>
                             <constraint firstItem="gtz-lJ-BqL" firstAttribute="top" secondItem="qqr-FT-Nve" secondAttribute="bottom" constant="10" id="kbb-t6-jGU"/>
@@ -317,7 +343,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="492.75362318840581" y="154.6875"/>
+            <point key="canvasLocation" x="-832" y="-143"/>
         </scene>
     </scenes>
 </document>

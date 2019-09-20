@@ -186,7 +186,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func encodeString(_ sender: Any) {
-        let packageCodec = PackageCodec.encoder(capacity: 20)
+        let packageCodec = PackageCodec.encoder(capacity: 8)
         try! packageCodec.encoderUInt8(UInt8(2))
         try! packageCodec.encoderString(string: "哈哈", end: true)
         print(NSData.init(data: packageCodec.targetData))
@@ -206,6 +206,30 @@ class ViewController: UIViewController {
         print(string1)
         
         showAlert(message: "<03e59388e5938800e59388e5938800> decoder为:\(value)" + string + string1, title: "data:<03e59388e5938800e59388e5938800>")
+    }
+    
+    @IBAction func encodeData(_ sender: Any) {
+        let data = Data.init([3,229, 147, 136, 229, 147, 136, 0])
+        let packageCodec = PackageCodec.encoder(capacity: 9)
+        try! packageCodec.encoderUInt8(UInt8(2))
+        try! packageCodec.encoderData(data: data)
+        
+        print(NSData.init(data: packageCodec.targetData))
+        print("xxxxxxxxxxxxxxxx")
+        print([UInt8](packageCodec.targetData))
+        showAlert(message: "2 (哈哈) 编码后为:\(NSData.init(data: packageCodec.targetData))", title: "UInt8(2) (哈哈)")
+        
+    }
+    
+    
+    @IBAction func deCodeData(_ sender: Any) {
+        let data = Data.init([3,229, 147, 136, 229, 147, 136, 0,232, 162, 171, 228, 189, 160, 232, 167, 163, 231, 160, 129, 228, 186, 134, 0])
+        let packageCodec  = PackageCodec.decoder(data: data)
+        let value         = try! packageCodec.decoderData(length: 8)
+        print(NSData.init(data: value))
+        
+        showAlert(message: "<03e59388e5938800e59388e5938800> decoderData长度为8的是:\(NSData.init(data: value))", title: "data:<03e59388e5938800e59388e5938800>")
+        
     }
     
 }

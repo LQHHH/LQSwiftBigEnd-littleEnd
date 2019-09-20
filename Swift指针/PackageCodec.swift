@@ -28,10 +28,13 @@ protocol PackageEncoder {
     func encoderLittleEndUInt32(_ value: UInt32) throws
     func encoderLittleEndUInt64(_ value: UInt64) throws
     
-    //MARK: -string
+    //MARK: - string
     
     func encoderString(string: String, end: Bool) throws
     
+    //MARK: - data
+    
+    func encoderData(data: Data) throws
 }
 
 protocol PackageDecoder {
@@ -52,6 +55,10 @@ protocol PackageDecoder {
     
     //解码的string必须是带0结尾的
     func decoderString(length: Int) throws -> String
+    
+    //MARK: - data
+    
+    func decoderData(length: Int) throws -> Data
 }
 
 class PackageCodec: NSObject {
@@ -314,6 +321,21 @@ extension PackageCodec: PackageEncoder {
             }
         }
     }
+    
+    func encoderData(data: Data) throws {
+        precondition(data.count > 0, "encoder string invalid!")
+        
+        let p    = [UInt8](data)
+        for (i,value) in p.enumerated() {
+            if self.position >= self.bufferSize {
+                throw PackageCodesError.EncodeOutOfMemory
+            }
+            self.bufferPoint[self.position] = value
+            self.position += 1
+        }
+    }
+    
+    
 }
 
 
@@ -543,6 +565,20 @@ extension PackageCodec: PackageDecoder {
         }
         self.position += 1
         return String.init(data: Data.init(result), encoding: .utf8)!
+    }
+    
+    func decoderData(length: Int) throws -> Data {
+        var result = [UInt8]()
+        for _ in 0 ..< length {
+            if self.position >= self.bufferSize {
+                throw PackageCodesError.DecodeOutOfBytes
+            }
+            let value = self.bufferPoint[self.position]
+            self.position += 1
+            result.append(value)
+        }
+        
+        return Data.init(result)
     }
     
 }
