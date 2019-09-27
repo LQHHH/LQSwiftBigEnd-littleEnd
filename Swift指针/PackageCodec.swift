@@ -326,7 +326,7 @@ extension PackageCodec: PackageEncoder {
         precondition(data.count > 0, "encoder string invalid!")
         
         let p    = [UInt8](data)
-        for (i,value) in p.enumerated() {
+        for value in p {
             if self.position >= self.bufferSize {
                 throw PackageCodesError.EncodeOutOfMemory
             }
