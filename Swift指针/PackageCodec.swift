@@ -63,9 +63,9 @@ protocol PackageDecoder {
 
 class PackageCodec: NSObject {
     
-    var bufferSize: Int!
-    var position: Int!
-    var bufferPoint: UnsafeMutableBufferPointer<UInt8>!
+    fileprivate var bufferSize: Int!
+    fileprivate var position: Int!
+    fileprivate var bufferPoint: UnsafeMutableBufferPointer<UInt8>!
     
     deinit {
         self.bufferPoint.deallocate()
@@ -123,13 +123,13 @@ extension PackageCodec: PackageEncoder {
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 8 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 8)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value & 0xFF)
         self.position += 1
     }
     
@@ -137,25 +137,25 @@ extension PackageCodec: PackageEncoder {
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 24 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 24)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 16 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 16 & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 8 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 8 & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value & 0xFF)
         self.position += 1
     }
     
@@ -163,49 +163,49 @@ extension PackageCodec: PackageEncoder {
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 56 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 56)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 48 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 48 & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 40 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 40 & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 32 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 32 & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 24 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 24 & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 16 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 16 & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 8 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 8 & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value & 0xFF)
         self.position += 1
     }
     
@@ -213,13 +213,13 @@ extension PackageCodec: PackageEncoder {
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 8 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 8)
         self.position += 1
     }
     
@@ -227,25 +227,25 @@ extension PackageCodec: PackageEncoder {
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 8 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 8 & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 16 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 16 & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 24 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 24)
         self.position += 1
     }
     
@@ -253,49 +253,49 @@ extension PackageCodec: PackageEncoder {
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 8 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 8 & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 16 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 16 & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 24 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 24 & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 32 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 32 & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 40 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 40 & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 48 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 48 & 0xFF)
         self.position += 1
         
         if self.position >= self.bufferSize {
             throw PackageCodesError.EncodeOutOfMemory
         }
-        self.bufferPoint[self.position] = UInt8(value >> 56 & 0x00FF)
+        self.bufferPoint[self.position] = UInt8(value >> 56)
         self.position += 1
     }
     
