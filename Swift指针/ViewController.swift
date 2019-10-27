@@ -21,84 +21,82 @@ class ViewController: UIViewController {
     //MARK: encoder bigEnd
 
     @IBAction func encodeUint8(_ sender: Any) {
-        let packageCodec = PackageCodec.encoder(capacity: 2)
-        try! packageCodec.encoderUInt8(UInt8(2))
-        try! packageCodec.encoderUInt8(UInt8(20))
+        let packageCodec = PackageCodec.encoder(capacity: 3)
+        try! packageCodec.encoderUInt8(2,20,30)
         print(NSData.init(data: packageCodec.targetData))
         print("xxxxxxxxxxxxxxxx")
         print([UInt8](packageCodec.targetData))
-        showAlert(message: "2 20 大端模式Uint8编码后为:\(NSData.init(data: packageCodec.targetData))", title: "UInt8(2) UInt8(20)")
+        showAlert(message: "2 20 30 大端模式Uint8编码后为:\(NSData.init(data: packageCodec.targetData))", title: "2 20 30")
     }
     
     @IBAction func encodeUInt16(_ sender: Any) {
-        let packageCodec = PackageCodec.encoder(capacity: 3)
-        try! packageCodec.encoderBigEndUInt16(UInt16(999))
-        try! packageCodec.encoderUInt8(UInt8(20))
+        let packageCodec = PackageCodec.encoder(capacity: 5)
+        try! packageCodec.encoderBigEndUInt16(999,999)
+        try! packageCodec.encoderUInt8(20)
         print(NSData.init(data: packageCodec.targetData))
         print("xxxxxxxxxxxxxxxx")
         print([UInt8](packageCodec.targetData))
-        showAlert(message: "999 20 大端模式Uint16编码后为:\(NSData.init(data: packageCodec.targetData))", title: "UInt16(999) UInt8(20)")
+        showAlert(message: "999 999 20 大端模式Uint16编码后为:\(NSData.init(data: packageCodec.targetData))", title: "999 999 20")
     }
     
     
     @IBAction func encodeUInt32(_ sender: Any) {
-        let packageCodec = PackageCodec.encoder(capacity: 5)
-        try! packageCodec.encoderBigEndUInt32(UInt32(1333))
-        try! packageCodec.encoderUInt8(UInt8(20))
+        let packageCodec = PackageCodec.encoder(capacity: 9)
+        try! packageCodec.encoderBigEndUInt32(1333,1333)
+        try! packageCodec.encoderUInt8(20)
         print(NSData.init(data: packageCodec.targetData))
         print("xxxxxxxxxxxxxxxx")
         print([UInt8](packageCodec.targetData))
-        showAlert(message: "1333 20 大端模式Uint32编码后为:\(NSData.init(data: packageCodec.targetData))", title: "UInt32(1333) UInt8(20)")
+        showAlert(message: "1333 1333 20 大端模式Uint32编码后为:\(NSData.init(data: packageCodec.targetData))", title: "1333 1333 20")
     }
     
     @IBAction func EncodeUint64(_ sender: Any) {
-        let packageCodec = PackageCodec.encoder(capacity: 8)
-        try! packageCodec.encoderBigEndUInt64(UInt64(87656))
+        let packageCodec = PackageCodec.encoder(capacity: 16)
+        try! packageCodec.encoderBigEndUInt64(87656,87656)
         print(NSData.init(data: packageCodec.targetData))
         print("xxxxxxxxxxxxxxxx")
         print([UInt8](packageCodec.targetData))
-        showAlert(message: "87656 大端模式Uint64编码后为:\(NSData.init(data: packageCodec.targetData))", title: "UInt64(87656)")
+        showAlert(message: "87656 87656 大端模式Uint64编码后为:\(NSData.init(data: packageCodec.targetData))", title: "87656 87656")
     }
     
     //MARK: encoder littleEnd
     
     @IBAction func littleEndEncodeUint8(_ sender: Any) {
         let packageCodec = PackageCodec.encoder(capacity: 2)
-        try! packageCodec.encoderUInt8(UInt8(2))
-        try! packageCodec.encoderUInt8(UInt8(20))
+        try! packageCodec.encoderUInt8(2,20)
         print(NSData.init(data: packageCodec.targetData))
         print("xxxxxxxxxxxxxxxx")
         print([UInt8](packageCodec.targetData))
-        showAlert(message: "2 20 小端模式Uint8编码后为:\(NSData.init(data: packageCodec.targetData))", title: "UInt8(2) UInt8(20)")
+        showAlert(message: "2 20 小端模式Uint8编码后为:\(NSData.init(data: packageCodec.targetData))", title: "2 20")
     }
     
     @IBAction func littleEndEncodeUint16(_ sender: Any) {
-        let packageCodec = PackageCodec.encoder(capacity: 3)
-        try! packageCodec.encoderLittleEndUInt16(UInt16(999))
-        try! packageCodec.encoderUInt8(UInt8(20))
+        let packageCodec = PackageCodec.encoder(capacity: 5)
+        try! packageCodec.encoderLittleEndUInt16(999,999)
+        try! packageCodec.encoderUInt8(20)
         print(NSData.init(data: packageCodec.targetData))
         print("xxxxxxxxxxxxxxxx")
         print([UInt8](packageCodec.targetData))
-        showAlert(message: "999 20 小端模式Uint16编码后为:\(NSData.init(data: packageCodec.targetData))", title: "UInt16(999) UInt8(20)")
+        showAlert(message: "999 999 20 小端模式Uint16编码后为:\(NSData.init(data: packageCodec.targetData))", title: "999 999 20")
     }
     
     @IBAction func littleEndEncodeUint32(_ sender: Any) {
-        let packageCodec = PackageCodec.encoder(capacity: 5)
-        try! packageCodec.encoderLittleEndUInt32(UInt32(1333))
-        try! packageCodec.encoderUInt8(UInt8(20))
+        let packageCodec = PackageCodec.encoder(capacity: 9)
+        try! packageCodec.encoderLittleEndUInt32(1333,1333)
+        try! packageCodec.encoderUInt8(20)
         print(NSData.init(data: packageCodec.targetData))
         print("xxxxxxxxxxxxxxxx")
         print([UInt8](packageCodec.targetData))
-        showAlert(message: "1333 20 小端模式Uint32编码后为:\(NSData.init(data: packageCodec.targetData))", title: "UInt32(1333) UInt8(20)")
+        showAlert(message: "1333 1333 20 小端模式Uint32编码后为:\(NSData.init(data: packageCodec.targetData))", title: "1333 1333 20")
     }
     
     @IBAction func littleEndEncodeUint64(_ sender: Any) {
-        let packageCodec = PackageCodec.encoder(capacity: 8)
-        try! packageCodec.encoderLittleEndUInt64(UInt64(87656))
+        let packageCodec = PackageCodec.encoder(capacity: 16)
+        try! packageCodec.encoderLittleEndUInt64(87656,87656)
         print(NSData.init(data: packageCodec.targetData))
         print("xxxxxxxxxxxxxxxx")
         print([UInt8](packageCodec.targetData))
-        showAlert(message: "87656 小端模式Uint64编码后为:\(NSData.init(data: packageCodec.targetData))", title: "UInt64(87656)")
+        showAlert(message: "87656 87656 小端模式Uint64编码后为:\(NSData.init(data: packageCodec.targetData))", title: "87656 87656")
     }
     
     //MARK: dncoder bigEnd

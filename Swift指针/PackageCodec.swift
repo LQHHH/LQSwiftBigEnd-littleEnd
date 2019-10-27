@@ -18,15 +18,15 @@ protocol PackageEncoder {
     
     //MARK: - int
     
-    func encoderUInt8(_ value: UInt8) throws
+    func encoderUInt8(_ values: UInt8 ...) throws
     
-    func encoderBigEndUInt16(_ value: UInt16) throws
-    func encoderBigEndUInt32(_ value: UInt32) throws
-    func encoderBigEndUInt64(_ value: UInt64) throws
+    func encoderBigEndUInt16(_ values: UInt16 ...) throws
+    func encoderBigEndUInt32(_ values: UInt32 ...) throws
+    func encoderBigEndUInt64(_ values: UInt64 ...) throws
     
-    func encoderLittleEndUInt16(_ value: UInt16) throws
-    func encoderLittleEndUInt32(_ value: UInt32) throws
-    func encoderLittleEndUInt64(_ value: UInt64) throws
+    func encoderLittleEndUInt16(_ values: UInt16 ...) throws
+    func encoderLittleEndUInt32(_ values: UInt32 ...) throws
+    func encoderLittleEndUInt64(_ values: UInt64 ...) throws
     
     //MARK: - string
     
@@ -111,192 +111,68 @@ extension PackageCodec: PackageEncoder {
         }
     }
     
-    func encoderUInt8(_ value: UInt8) throws {
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
+    func encoderUInt8(_ values: UInt8 ...) throws {
+        for value in values {
+           try encoderBigEndValue(index: 1, value:value as UInt8)
         }
-        self.bufferPoint[self.position] = value
-        self.position += 1
     }
     
-    func encoderBigEndUInt16(_ value: UInt16) throws {
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
+    func encoderBigEndUInt16(_ values: UInt16 ...) throws {
+        for value in values {
+           try encoderBigEndValue(index: 2, value:value as UInt16)
         }
-        self.bufferPoint[self.position] = UInt8(value >> 8)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value & 0xFF)
-        self.position += 1
     }
     
-    func encoderBigEndUInt32(_ value: UInt32) throws {
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
+    func encoderBigEndUInt32(_ values: UInt32 ...) throws {
+        for value in values {
+            try encoderBigEndValue(index: 4, value:value as UInt32)
         }
-        self.bufferPoint[self.position] = UInt8(value >> 24)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 16 & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 8 & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value & 0xFF)
-        self.position += 1
     }
     
-    func encoderBigEndUInt64(_ value: UInt64) throws {
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
+    func encoderBigEndUInt64(_ values: UInt64 ...) throws {
+        for value in values {
+            try encoderBigEndValue(index: 8, value:value as UInt64)
         }
-        self.bufferPoint[self.position] = UInt8(value >> 56)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 48 & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 40 & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 32 & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 24 & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 16 & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 8 & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value & 0xFF)
-        self.position += 1
     }
     
-    func encoderLittleEndUInt16(_ value: UInt16) throws {
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
+    func encoderBigEndValue<T:UnsignedInteger>(index: Int, value:T) throws {
+        for i in 1 ... index {
+            if self.position >= self.bufferSize {
+                throw PackageCodesError.EncodeOutOfMemory
+            }
+            let offset = (index - i)*8
+            self.bufferPoint[self.position] = UInt8(value >> offset & 0xFF)
+            self.position += 1
         }
-        self.bufferPoint[self.position] = UInt8(value & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 8)
-        self.position += 1
     }
     
-    func encoderLittleEndUInt32(_ value: UInt32) throws {
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
+    func encoderLittleEndUInt16(_ values: UInt16 ...) throws {
+        for value in values {
+            try encoderLittleEndValue(index: 2, value:value as UInt16)
         }
-        self.bufferPoint[self.position] = UInt8(value & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 8 & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 16 & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 24)
-        self.position += 1
     }
     
-    func encoderLittleEndUInt64(_ value: UInt64) throws {
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
+    func encoderLittleEndUInt32(_ values: UInt32 ...) throws {
+        for value in values {
+            try encoderLittleEndValue(index: 4, value:value as UInt32)
         }
-        self.bufferPoint[self.position] = UInt8(value & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
+    }
+    
+    func encoderLittleEndUInt64(_ values: UInt64 ...) throws {
+        for value in values {
+            try encoderLittleEndValue(index: 8, value:value as UInt64)
         }
-        self.bufferPoint[self.position] = UInt8(value >> 8 & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
+    }
+    
+    func encoderLittleEndValue<T:UnsignedInteger>(index: Int, value:T) throws {
+        for i in 0 ..< index {
+            if self.position >= self.bufferSize {
+                throw PackageCodesError.EncodeOutOfMemory
+            }
+            let offset = i*8
+            self.bufferPoint[self.position] = UInt8(value >> offset & 0xFF)
+            self.position += 1
         }
-        self.bufferPoint[self.position] = UInt8(value >> 16 & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 24 & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 32 & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 40 & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 48 & 0xFF)
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.EncodeOutOfMemory
-        }
-        self.bufferPoint[self.position] = UInt8(value >> 56)
-        self.position += 1
     }
     
     func encoderString(string: String, end: Bool) throws {
