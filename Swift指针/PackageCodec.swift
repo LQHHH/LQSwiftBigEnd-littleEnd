@@ -119,34 +119,34 @@ extension PackageCodec: PackageEncoder {
     
     func encoderUInt8(_ values: UInt8 ...) throws {
         for value in values {
-           try encoderBigEndValue(index: 1, value:value as UInt8)
+           try encoderBigEndValue(length: 1, value:value as UInt8)
         }
     }
     
     func encoderBigEndUInt16(_ values: UInt16 ...) throws {
         for value in values {
-           try encoderBigEndValue(index: 2, value:value as UInt16)
+           try encoderBigEndValue(length: 2, value:value as UInt16)
         }
     }
     
     func encoderBigEndUInt32(_ values: UInt32 ...) throws {
         for value in values {
-            try encoderBigEndValue(index: 4, value:value as UInt32)
+            try encoderBigEndValue(length: 4, value:value as UInt32)
         }
     }
     
     func encoderBigEndUInt64(_ values: UInt64 ...) throws {
         for value in values {
-            try encoderBigEndValue(index: 8, value:value as UInt64)
+            try encoderBigEndValue(length: 8, value:value as UInt64)
         }
     }
     
-    func encoderBigEndValue<T:UnsignedInteger>(index: Int, value:T) throws {
-        for i in 1 ... index {
+    func encoderBigEndValue<T: UnsignedInteger>(length: Int, value: T) throws {
+        for i in 1 ... length {
             if self.position >= self.bufferSize {
                 throw PackageCodesError.encodeOutOfMemory
             }
-            let offset = (index - i)*8
+            let offset = (length - i)*8
             self.bufferPoint[self.position] = UInt8(value >> offset & 0xFF)
             self.position += 1
         }
@@ -154,24 +154,24 @@ extension PackageCodec: PackageEncoder {
     
     func encoderLittleEndUInt16(_ values: UInt16 ...) throws {
         for value in values {
-            try encoderLittleEndValue(index: 2, value:value as UInt16)
+            try encoderLittleEndValue(length: 2, value:value as UInt16)
         }
     }
     
     func encoderLittleEndUInt32(_ values: UInt32 ...) throws {
         for value in values {
-            try encoderLittleEndValue(index: 4, value:value as UInt32)
+            try encoderLittleEndValue(length: 4, value:value as UInt32)
         }
     }
     
     func encoderLittleEndUInt64(_ values: UInt64 ...) throws {
         for value in values {
-            try encoderLittleEndValue(index: 8, value:value as UInt64)
+            try encoderLittleEndValue(length: 8, value:value as UInt64)
         }
     }
     
-    func encoderLittleEndValue<T:UnsignedInteger>(index: Int, value:T) throws {
-        for i in 0 ..< index {
+    func encoderLittleEndValue<T: UnsignedInteger>(length: Int, value: T) throws {
+        for i in 0 ..< length {
             if self.position >= self.bufferSize {
                 throw PackageCodesError.encodeOutOfMemory
             }
@@ -226,213 +226,64 @@ extension PackageCodec: PackageEncoder {
 extension PackageCodec: PackageDecoder {
     
     func decoderUInt8() throws -> UInt8 {
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value = self.bufferPoint[self.position]
-        self.position += 1
-        return value
+        return try decoderBigEndValue(length: 1) as UInt8
     }
     
     func decoderBigEndUInt16() throws -> UInt16 {
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value1 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value2 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        let value = UInt16(value1) << 8 | UInt16(value2)
-        return value
+        return try decoderBigEndValue(length: 2) as UInt16
         
     }
     
     func decoderBigEndUInt32() throws -> UInt32 {
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value1 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value2 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value3 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value4 = self.bufferPoint[self.position]
-        self.position += 1
-        let value = UInt32(value1) << 24 | UInt32(value2) << 16 | UInt32(value3) << 8 | UInt32(value4)
-        
-        return value
+        return try decoderBigEndValue(length: 4) as UInt32
     }
     
     func decoderBigEndUInt64() throws -> UInt64 {
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
+        return try decoderBigEndValue(length: 8) as UInt64
+    }
+    
+    func decoderBigEndValue<T: UnsignedInteger>(length: Int) throws -> T {
+        var values = [T]()
+        for i in 1 ... length {
+            if self.position >= self.bufferSize {
+                throw PackageCodesError.decodeOutOfBytes
+            }
+            let value = self.bufferPoint[self.position]
+            self.position += 1
+            let offset = (length - i)*8
+            values.append(T(value) << offset)
         }
-        let value1 = self.bufferPoint[self.position]
-        self.position += 1
         
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value2 = self.bufferPoint[self.position]
-        self.position += 1
+        return values.reduce(0) {$0 | $1}
         
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value3 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value4 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value5 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value6 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value7 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value8 = self.bufferPoint[self.position]
-        self.position += 1
-        let value = UInt64(value1) << 56 | UInt64(value2) << 48 | UInt64(value3) << 40 | UInt64(value4) << 32 | UInt64(value5) << 24 |
-                    UInt64(value6) << 16 | UInt64(value7) << 8 | UInt64(value8)
-        
-        return value
     }
     
     func decoderLittleEndUInt16() throws -> UInt16 {
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value1 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value2 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        let value = UInt16(value1) | UInt16(value2) << 8
-        return value
+        return try decoderLittleEndValue(length: 2) as UInt16
     }
     
     func decoderLittleEndUInt32() throws -> UInt32 {
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value1 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value2 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value3 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value4 = self.bufferPoint[self.position]
-        self.position += 1
-        let value = UInt32(value1) | UInt32(value2) << 8 | UInt32(value3) << 16 | UInt32(value4) << 24
-        
-        return value
+        return try decoderLittleEndValue(length: 4) as UInt32
     }
     
     func decoderLittleEndUInt64() throws -> UInt64 {
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
+        return try decoderLittleEndValue(length: 8) as UInt64
+    }
+    
+    func decoderLittleEndValue<T: UnsignedInteger>(length: Int) throws -> T {
+        var values = [T]()
+        for i in 0 ..< length {
+            if self.position >= self.bufferSize {
+                throw PackageCodesError.decodeOutOfBytes
+            }
+            let value = self.bufferPoint[self.position]
+            self.position += 1
+            let offset = i*8
+            values.append(T(value) << offset)
         }
-        let value1 = self.bufferPoint[self.position]
-        self.position += 1
         
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value2 = self.bufferPoint[self.position]
-        self.position += 1
+        return values.reduce(0) {$0 | $1}
         
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value3 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value4 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value5 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value6 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value7 = self.bufferPoint[self.position]
-        self.position += 1
-        
-        if self.position >= self.bufferSize {
-            throw PackageCodesError.decodeOutOfBytes
-        }
-        let value8 = self.bufferPoint[self.position]
-        self.position += 1
-        let value = UInt64(value1) | UInt64(value2) << 8 | UInt64(value3) << 16 | UInt64(value4) << 24 | UInt64(value5) << 32 |
-            UInt64(value6) << 40 | UInt64(value7) << 48 | UInt64(value8) << 56
-        
-        return value
     }
     
     func decoderString(length: Int) throws -> String {
@@ -464,3 +315,4 @@ extension PackageCodec: PackageDecoder {
     }
     
 }
+
