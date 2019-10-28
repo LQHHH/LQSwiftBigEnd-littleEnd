@@ -5,12 +5,12 @@
 // Copyright © 2019 LQ inc. All rights reserved.
 // @author LQ  //
 
-import UIKit
+import Foundation
 
 
 enum PackageCodesError: Error {
-    case EncodeOutOfMemory
-    case DecodeOutOfBytes
+    case encodeOutOfMemory
+    case decodeOutOfBytes
     
 }
 
@@ -35,6 +35,8 @@ protocol PackageEncoder {
     //MARK: - data
     
     func encoderData(data: Data) throws
+    
+    func reset()
 }
 
 protocol PackageDecoder {
@@ -111,6 +113,10 @@ extension PackageCodec: PackageEncoder {
         }
     }
     
+    func reset() {
+        self.position = 0
+    }
+    
     func encoderUInt8(_ values: UInt8 ...) throws {
         for value in values {
            try encoderBigEndValue(index: 1, value:value as UInt8)
@@ -138,7 +144,7 @@ extension PackageCodec: PackageEncoder {
     func encoderBigEndValue<T:UnsignedInteger>(index: Int, value:T) throws {
         for i in 1 ... index {
             if self.position >= self.bufferSize {
-                throw PackageCodesError.EncodeOutOfMemory
+                throw PackageCodesError.encodeOutOfMemory
             }
             let offset = (index - i)*8
             self.bufferPoint[self.position] = UInt8(value >> offset & 0xFF)
@@ -167,7 +173,7 @@ extension PackageCodec: PackageEncoder {
     func encoderLittleEndValue<T:UnsignedInteger>(index: Int, value:T) throws {
         for i in 0 ..< index {
             if self.position >= self.bufferSize {
-                throw PackageCodesError.EncodeOutOfMemory
+                throw PackageCodesError.encodeOutOfMemory
             }
             let offset = i*8
             self.bufferPoint[self.position] = UInt8(value >> offset & 0xFF)
@@ -183,14 +189,14 @@ extension PackageCodec: PackageEncoder {
         
         for (i,value) in p.enumerated() {
             if self.position >= self.bufferSize {
-                throw PackageCodesError.EncodeOutOfMemory
+                throw PackageCodesError.encodeOutOfMemory
             }
             self.bufferPoint[self.position] = value
             self.position += 1
             
             if (end && i == p.count - 1) {
                 if self.position >= self.bufferSize {
-                    throw PackageCodesError.EncodeOutOfMemory
+                    throw PackageCodesError.encodeOutOfMemory
                 }
                 self.bufferPoint[self.position] = 0
                 self.position += 1
@@ -204,7 +210,7 @@ extension PackageCodec: PackageEncoder {
         let p    = [UInt8](data)
         for value in p {
             if self.position >= self.bufferSize {
-                throw PackageCodesError.EncodeOutOfMemory
+                throw PackageCodesError.encodeOutOfMemory
             }
             self.bufferPoint[self.position] = value
             self.position += 1
@@ -221,7 +227,7 @@ extension PackageCodec: PackageDecoder {
     
     func decoderUInt8() throws -> UInt8 {
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value = self.bufferPoint[self.position]
         self.position += 1
@@ -230,13 +236,13 @@ extension PackageCodec: PackageDecoder {
     
     func decoderBigEndUInt16() throws -> UInt16 {
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value1 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value2 = self.bufferPoint[self.position]
         self.position += 1
@@ -248,25 +254,25 @@ extension PackageCodec: PackageDecoder {
     
     func decoderBigEndUInt32() throws -> UInt32 {
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value1 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value2 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value3 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value4 = self.bufferPoint[self.position]
         self.position += 1
@@ -277,49 +283,49 @@ extension PackageCodec: PackageDecoder {
     
     func decoderBigEndUInt64() throws -> UInt64 {
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value1 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value2 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value3 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value4 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value5 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value6 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value7 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value8 = self.bufferPoint[self.position]
         self.position += 1
@@ -331,13 +337,13 @@ extension PackageCodec: PackageDecoder {
     
     func decoderLittleEndUInt16() throws -> UInt16 {
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value1 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value2 = self.bufferPoint[self.position]
         self.position += 1
@@ -348,25 +354,25 @@ extension PackageCodec: PackageDecoder {
     
     func decoderLittleEndUInt32() throws -> UInt32 {
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value1 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value2 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value3 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value4 = self.bufferPoint[self.position]
         self.position += 1
@@ -377,49 +383,49 @@ extension PackageCodec: PackageDecoder {
     
     func decoderLittleEndUInt64() throws -> UInt64 {
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value1 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value2 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value3 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value4 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value5 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value6 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value7 = self.bufferPoint[self.position]
         self.position += 1
         
         if self.position >= self.bufferSize {
-            throw PackageCodesError.DecodeOutOfBytes
+            throw PackageCodesError.decodeOutOfBytes
         }
         let value8 = self.bufferPoint[self.position]
         self.position += 1
@@ -433,7 +439,7 @@ extension PackageCodec: PackageDecoder {
         var result = [UInt8]()
         for _ in 0 ..< length {
             if self.position >= self.bufferSize {
-                throw PackageCodesError.DecodeOutOfBytes
+                throw PackageCodesError.decodeOutOfBytes
             }
             let value = self.bufferPoint[self.position]
             self.position += 1
@@ -447,7 +453,7 @@ extension PackageCodec: PackageDecoder {
         var result = [UInt8]()
         for _ in 0 ..< length {
             if self.position >= self.bufferSize {
-                throw PackageCodesError.DecodeOutOfBytes
+                throw PackageCodesError.decodeOutOfBytes
             }
             let value = self.bufferPoint[self.position]
             self.position += 1
