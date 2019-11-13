@@ -225,6 +225,15 @@ extension PackageCodec: PackageEncoder {
 
 extension PackageCodec: PackageDecoder {
     
+    var remainBytes: Int {
+        if bufferPoint.count == 0 {
+            return 0
+        }
+        
+        let remain = bufferPoint.count - position;
+        return remain
+    }
+    
     func decoderUInt8() throws -> UInt8 {
         return try decoderBigEndValue(length: 1) as UInt8
     }
@@ -288,15 +297,21 @@ extension PackageCodec: PackageDecoder {
     
     func decoderString(length: Int) throws -> String {
         var result = [UInt8]()
-        for _ in 0 ..< length {
+        while true {
             if position >= bufferSize {
                 throw PackageCodesError.decodeOutOfBytes
             }
+            
             let value = bufferPoint[position]
             position += 1
+            if value == 0 {
+                break
+            }
             result.append(value)
+            if position >= bufferSize {
+                break
+            }
         }
-        position += 1
         return String(data: Data(result), encoding: .utf8)!
     }
     
