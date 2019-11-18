@@ -252,19 +252,18 @@ extension PackageCodec: PackageDecoder {
     }
     
     func decoderBigEndValue<T: UnsignedInteger>(length: Int) throws -> T {
-         var values = [T]()
-         for i in 0 ..< length {
-             if position >= bufferSize {
-                 throw PackageCodesError.decodeOutOfBytes
-             }
-             let value = bufferPoint[position]
-             position += 1
-             let offset = i*8
-             values.append(T(value) << offset)
-         }
-         
-         return values.reduce(0) {$0 | $1}
+        var values = [T]()
+        for i in 1 ... length {
+            if position >= bufferSize {
+                throw PackageCodesError.decodeOutOfBytes
+            }
+            let value = bufferPoint[position]
+            position += 1
+            let offset = (length - i)*8
+            values.append(T(value) << offset)
+        }
         
+        return values.reduce(0) {$0 | $1}
     }
     
     func decoderLittleEndUInt16() throws -> UInt16 {
@@ -280,20 +279,18 @@ extension PackageCodec: PackageDecoder {
     }
     
     func decoderLittleEndValue<T: UnsignedInteger>(length: Int) throws -> T {
-        
         var values = [T]()
-        for i in 1 ... length {
+        for i in 0 ..< length {
             if position >= bufferSize {
                 throw PackageCodesError.decodeOutOfBytes
             }
             let value = bufferPoint[position]
             position += 1
-            let offset = (length - i)*8
+            let offset = i*8
             values.append(T(value) << offset)
         }
         
         return values.reduce(0) {$0 | $1}
-        
     }
     
     func decoderString(length: Int) throws -> String {
