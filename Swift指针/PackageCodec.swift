@@ -18,14 +18,25 @@ protocol PackageEncoder {
     
     //MARK: - int
     
+    func encoderInt8(_ values: Int8 ...) throws
     func encoderUInt8(_ values: UInt8 ...) throws
     
+    func encoderBigEndInt16(_ values: Int16 ...) throws
     func encoderBigEndUInt16(_ values: UInt16 ...) throws
+    
+    func encoderBigEndInt32(_ values: Int32 ...) throws
     func encoderBigEndUInt32(_ values: UInt32 ...) throws
+    
+    func encoderBigEndInt64(_ values: Int64 ...) throws
     func encoderBigEndUInt64(_ values: UInt64 ...) throws
     
+    func encoderLittleEndInt16(_ values: Int16 ...) throws
     func encoderLittleEndUInt16(_ values: UInt16 ...) throws
+    
+    func encoderLittleEndInt32(_ values: Int32 ...) throws
     func encoderLittleEndUInt32(_ values: UInt32 ...) throws
+    
+    func encoderLittleEndInt64(_ values: Int64 ...) throws
     func encoderLittleEndUInt64(_ values: UInt64 ...) throws
     
     //MARK: - string
@@ -43,14 +54,25 @@ protocol PackageDecoder {
     
     //MARK: - int
     
+    func decoderInt8() throws -> Int8
     func decoderUInt8() throws -> UInt8
     
+    func decoderBigEndInt16() throws -> Int16
     func decoderBigEndUInt16() throws -> UInt16
+    
+    func decoderBigEndInt32() throws -> Int32
     func decoderBigEndUInt32() throws -> UInt32
+    
+    func decoderBigEndInt64() throws -> Int64
     func decoderBigEndUInt64() throws -> UInt64
     
+    func decoderLittleEndInt16() throws -> Int16
     func decoderLittleEndUInt16() throws -> UInt16
+    
+    func decoderLittleEndInt32() throws -> Int32
     func decoderLittleEndUInt32() throws -> UInt32
+    
+    func decoderLittleEndInt64() throws -> Int64
     func decoderLittleEndUInt64() throws -> UInt64
     
     //MARK: - string
@@ -117,9 +139,21 @@ extension PackageCodec: PackageEncoder {
         position = 0
     }
     
+    func encoderInt8(_ values: Int8...) throws {
+         for value in values {
+            try encoderBigEndValue(length: 1, value:UInt8(bitPattern: value) as UInt8)
+         }
+    }
+    
     func encoderUInt8(_ values: UInt8 ...) throws {
         for value in values {
            try encoderBigEndValue(length: 1, value:value as UInt8)
+        }
+    }
+    
+    func encoderBigEndInt16(_ values: Int16...) throws {
+        for value in values {
+           try encoderBigEndValue(length: 2, value:UInt16(bitPattern: value) as UInt16)
         }
     }
     
@@ -129,9 +163,21 @@ extension PackageCodec: PackageEncoder {
         }
     }
     
+    func encoderBigEndInt32(_ values: Int32...) throws {
+        for value in values {
+            try encoderBigEndValue(length: 4, value:UInt32(bitPattern: value) as UInt32)
+        }
+    }
+    
     func encoderBigEndUInt32(_ values: UInt32 ...) throws {
         for value in values {
             try encoderBigEndValue(length: 4, value:value as UInt32)
+        }
+    }
+    
+    func encoderBigEndInt64(_ values: Int64...) throws {
+        for value in values {
+            try encoderBigEndValue(length: 8, value:UInt64(bitPattern: value) as UInt64)
         }
     }
     
@@ -152,15 +198,34 @@ extension PackageCodec: PackageEncoder {
         }
     }
     
+    
+    func encoderLittleEndInt16(_ values: Int16...) throws {
+        for value in values {
+            try encoderLittleEndValue(length: 2, value:UInt16(bitPattern: value) as UInt16)
+        }
+    }
+    
     func encoderLittleEndUInt16(_ values: UInt16 ...) throws {
         for value in values {
             try encoderLittleEndValue(length: 2, value:value as UInt16)
         }
     }
     
+    func encoderLittleEndInt32(_ values: Int32...) throws {
+        for value in values {
+            try encoderLittleEndValue(length: 4, value:UInt32(bitPattern: value) as UInt32)
+        }
+    }
+    
     func encoderLittleEndUInt32(_ values: UInt32 ...) throws {
         for value in values {
             try encoderLittleEndValue(length: 4, value:value as UInt32)
+        }
+    }
+    
+    func encoderLittleEndInt64(_ values: Int64...) throws {
+        for value in values {
+            try encoderLittleEndValue(length: 8, value:UInt64(bitPattern: value) as UInt64)
         }
     }
     
@@ -234,8 +299,16 @@ extension PackageCodec: PackageDecoder {
         return remain
     }
     
+    func decoderInt8() throws -> Int8 {
+       return try Int8(bitPattern: decoderUInt8())
+    }
+    
     func decoderUInt8() throws -> UInt8 {
         return try decoderBigEndValue(length: 1) as UInt8
+    }
+    
+    func decoderBigEndInt16() throws -> Int16 {
+        return  try Int16(bitPattern: decoderBigEndUInt16())
     }
     
     func decoderBigEndUInt16() throws -> UInt16 {
@@ -243,8 +316,16 @@ extension PackageCodec: PackageDecoder {
         
     }
     
+    func decoderBigEndInt32() throws -> Int32 {
+        return try Int32(bitPattern: decoderBigEndUInt32())
+    }
+    
     func decoderBigEndUInt32() throws -> UInt32 {
         return try decoderBigEndValue(length: 4) as UInt32
+    }
+    
+    func decoderBigEndInt64() throws -> Int64 {
+         return try Int64(bitPattern: decoderBigEndUInt64())
     }
     
     func decoderBigEndUInt64() throws -> UInt64 {
@@ -264,14 +345,27 @@ extension PackageCodec: PackageDecoder {
         }
         
         return values.reduce(0) {$0 | $1}
+        
+    }
+    
+    func decoderLittleEndInt16() throws -> Int16 {
+        return try Int16(decoderLittleEndInt16())
     }
     
     func decoderLittleEndUInt16() throws -> UInt16 {
         return try decoderLittleEndValue(length: 2) as UInt16
     }
     
+    func decoderLittleEndInt32() throws -> Int32 {
+        return try Int32(bitPattern: decoderLittleEndUInt32())
+    }
+    
     func decoderLittleEndUInt32() throws -> UInt32 {
         return try decoderLittleEndValue(length: 4) as UInt32
+    }
+    
+    func decoderLittleEndInt64() throws -> Int64 {
+        return try Int64(bitPattern: decoderLittleEndUInt64())
     }
     
     func decoderLittleEndUInt64() throws -> UInt64 {
@@ -291,6 +385,7 @@ extension PackageCodec: PackageDecoder {
         }
         
         return values.reduce(0) {$0 | $1}
+        
     }
     
     func decoderString(length: Int) throws -> String {
