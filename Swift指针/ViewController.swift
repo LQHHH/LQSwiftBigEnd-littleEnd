@@ -190,7 +190,7 @@ class ViewController: UIViewController {
         print(NSData.init(data: packageCodec.targetData))
         print("xxxxxxxxxxxxxxxx")
         print([UInt8](packageCodec.targetData))
-        showAlert(message: "2 (哈哈) 编码后为:\(NSData.init(data: packageCodec.targetData))", title: "UInt8(2) (哈哈)")
+        showAlert(message: "2 (哈哈) 编码后为:\(NSData(data: packageCodec.targetData))", title: "UInt8(2) (哈哈)")
     }
     
     @IBAction func deCodeString(_ sender: Any) {
