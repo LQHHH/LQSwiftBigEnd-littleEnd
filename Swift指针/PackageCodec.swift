@@ -85,8 +85,7 @@ protocol PackageDecoder {
     
     //MARK: - string
     
-    //解码的string必须是带0结尾的
-    func decoderString(length: Int) throws -> String
+    func decoderString() throws -> String
     
     //MARK: - data
     
@@ -394,7 +393,7 @@ extension PackageCodec: PackageDecoder {
         return value
     }
     
-    func decoderString(length: Int) throws -> String {
+    func decoderString() throws -> String {
         let pointer = bufferPoint.advanced(by: position).bindMemory(to: Int8.self, capacity: self.remainBytes)
         let length = strlen(pointer)
         if position + length + 1 > bufferSize {
