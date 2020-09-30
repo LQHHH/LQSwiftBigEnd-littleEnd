@@ -251,9 +251,9 @@ extension PackageCodec: PackageEncoder {
             return
         }
         
-        let count = end ? data.count + 1 : data.count
+        let offset = end ? 1 : 0
         
-        if position + count > bufferSize {
+        if position + data.count + offset > bufferSize {
             throw PackageCodesError.encodeOutOfMemory
         }
         
@@ -261,14 +261,16 @@ extension PackageCodec: PackageEncoder {
             guard let pointer = $0.baseAddress else {
                 return
             }
-            bufferPoint.advanced(by: position).copyMemory(from: pointer, byteCount: count)
+            bufferPoint.advanced(by: position).copyMemory(from: pointer, byteCount: data.count)
         }
+        
+        position += data.count
         
         if end {
-            bufferPoint.advanced(by: 1).storeBytes(of: 0, as: UInt8.self)
+            bufferPoint.advanced(by: position).storeBytes(of: 0, as: UInt8.self)
         }
         
-        position += count
+        
        
     }
     
@@ -335,7 +337,7 @@ extension PackageCodec: PackageDecoder {
     }
     
     func decoderLittleEndInt16() throws -> Int16 {
-        return try Int16(decoderLittleEndInt16())
+        return try decoder()
     }
     
     func decoderLittleEndUInt16() throws -> UInt16 {
